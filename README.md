@@ -7,7 +7,7 @@
 
 ---
 
-## 🔍 Project Overview
+# 🔍 Project Overview
 
 Taska is being built as a clean and scalable task management app. Currently, it includes:
 
@@ -20,9 +20,9 @@ The goal is to provide users with a simple yet secure experience while managing 
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Getting Started
 
-### ✅ Requirements
+## ✅ Requirements
 
 Make sure you have the following installed:
 
@@ -36,7 +36,20 @@ Make sure you have the following installed:
 
 ---
 
-### ▶️ Run the App
+## ▶️ Run the App
+## After installing Android Studio:
+Go to plugins and install the Flutter plugin
+Click on more actions and go to the SDK Manager.
+![1](https://github.com/user-attachments/assets/9b2e3757-2ed5-48f9-8b9e-7e65163236c3)
+
+Make sure you have Android 15 (API level 35) marked on.
+![2](https://github.com/user-attachments/assets/1832a808-09ab-435a-b549-c4e21c0a1a75)
+
+Then go to the SDK tools tab and select all the tools in the picture, then mark Show package details.
+![3](https://github.com/user-attachments/assets/40f0e253-ab1c-4e24-8f17-dfcf9ab71770)
+
+Make sure you select NDK version 27.2.12479018, then hit apply. 
+![4](https://github.com/user-attachments/assets/d8136a84-df2b-4cad-a879-b859e20df90e)
 
 You can run the app using either:
 
@@ -60,6 +73,7 @@ You can run the app using either:
     flutter run
 
 ## 🔐 Important Notes
+* The app runs with Java 17.
 * This project contains the google-services.json file for development use.
  Do not reuse this configuration in production apps or other projects.
 * The app uses Firebase Email & Password Authentication only for now.
