@@ -38,7 +38,8 @@ Make sure you have the following installed:
 
 ## ▶️ Run the App
 ## After installing Android Studio:
-Go to plugins and install the Flutter plugin
+Go to plugins and install the Flutter plugin.
+
 Click on more actions and go to the SDK Manager.
 ![1](https://github.com/user-attachments/assets/9b2e3757-2ed5-48f9-8b9e-7e65163236c3)
 
