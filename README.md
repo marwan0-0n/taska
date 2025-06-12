@@ -28,6 +28,7 @@ Make sure you have the following installed:
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install)
 - Android Studio or VS Code
+  - On VS Code, make sure you have Flutter and Dart extentions installed.
 - A connected Android device **or** an emulator
 - Your machine is properly set up with:
   - Android SDK
