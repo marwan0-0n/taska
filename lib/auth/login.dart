@@ -20,7 +20,7 @@ GlobalKey<FormState> formState = GlobalKey();
 bool passShowStat = true;
 
 class _LoginState extends State<Login> {
-  TextEditingController emailAndUsername = TextEditingController();
+  TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -61,9 +61,9 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   CustReqTextForm(
-                    titleText: "Username or Email",
-                    hint: "Enter Username or Email",
-                    textConroller: emailAndUsername,
+                    titleText: "Email",
+                    hint: "Enter your email",
+                    textConroller: email,
                   ),
                   Container(height: 15),
                   PasswordForm(passwordController: password),
@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
               alignment: Alignment.topRight,
               child: InkWell(
                 onTap: () {
-                  if (emailAndUsername.text == "") {
+                  if (email.text == "") {
                     AwesomeDialog(
                       context: context,
                       dialogType: DialogType.error,
@@ -93,7 +93,7 @@ class _LoginState extends State<Login> {
                       btnCancelOnPress: () {},
                       btnOkOnPress: () async {
                         await FirebaseAuth.instance.sendPasswordResetEmail(
-                          email: emailAndUsername.text,
+                          email: email.text,
                         );
                         AwesomeDialog(
                           context: context,
@@ -146,7 +146,7 @@ class _LoginState extends State<Login> {
                 if (formState.currentState!.validate()) {
                   try {
                     await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: emailAndUsername.text,
+                      email: email.text,
                       password: password.text,
                     );
                     if (!FirebaseAuth.instance.currentUser!.emailVerified) {
