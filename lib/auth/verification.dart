@@ -42,9 +42,8 @@ class _VerificationState extends State<Verification> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Center(
+                  const Center(
+                    child: Center(
                       child: Text(
                         "We've sent you a verification link to your Email",
                         style: TextStyle(
@@ -56,7 +55,7 @@ class _VerificationState extends State<Verification> {
                       ),
                     ),
                   ),
-                  Container(height: 30),
+                  Container(height: screenHeight / 30),
                   Text(
                     notVerifyed,
                     style: const TextStyle(
@@ -82,7 +81,7 @@ class _VerificationState extends State<Verification> {
                     },
                     textColorCode: 0xffFFFFFF,
                   ),
-                  Container(height: 10),
+                  Container(height: screenHeight / 90),
                   InkWell(
                     onTap: () async {
                       await FirebaseAuth.instance.currentUser!

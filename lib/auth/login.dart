@@ -24,6 +24,7 @@ class _LoginState extends State<Login> {
   TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,149 +38,153 @@ class _LoginState extends State<Login> {
         toolbarHeight: 45,
         iconTheme: const IconThemeData(size: 35, color: Colors.black),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView(
-          children: [
-            const Center(child: CircleLogo()),
-            Container(
-              margin: const EdgeInsets.only(bottom: 15),
-              child: const Text(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: ListView(
+            children: [
+              const Center(child: CircleLogo()),
+              const Text(
                 "Let's Sign You In",
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 35),
-              child: const Text(
-                "Welcome Back!",
-                style: TextStyle(fontSize: 37, color: Color(0xffB0B0B0)),
-              ),
-            ),
-            Form(
-              key: formState,
-              child: Column(
-                children: [
-                  CustReqTextForm(
-                    titleText: "Email",
-                    hint: "Enter your email",
-                    textConroller: email,
-                  ),
-                  Container(height: 15),
-                  PasswordForm(passwordController: password),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 8, 0, 25),
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () {
-                  if (email.text == "") {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.rightSlide,
-                      title: 'Email field is empty',
-                      desc: 'Please enter your email in the email field.',
-                    ).show();
-                  } else {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.question,
-                      animType: AnimType.rightSlide,
-                      title: 'Password reset',
-                      desc: 'Want to receive password reset mail?',
-                      btnCancelOnPress: () {},
-                      btnOkOnPress: () async {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                          email: email.text,
-                        );
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.success,
-                          animType: AnimType.rightSlide,
-                          title: 'Password reset mail sent',
-                          desc: 'Check your inbox and reset password.',
-                        ).show();
-                      },
-                    ).show();
-                  }
-                },
+              Container(
+                margin: EdgeInsets.only(bottom: screenHeight / 18),
                 child: const Text(
-                  "Forget Password?",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "Welcome Back!",
+                  style: TextStyle(fontSize: 37, color: Color(0xffB0B0B0)),
                 ),
               ),
-            ),
-            const CustDivider(),
-            Container(height: 25),
-            const OtherSigninOptions(),
-            Container(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account? ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xffB0B0B0),
-                  ),
+              Form(
+                key: formState,
+                child: Column(
+                  children: [
+                    CustReqTextForm(
+                      titleText: "Email",
+                      hint: "Enter your email",
+                      textConroller: email,
+                    ),
+                    Container(height: screenHeight / 50),
+                    PasswordForm(passwordController: password),
+                  ],
                 ),
-                InkWell(
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(
+                  0,
+                  screenHeight / 150,
+                  0,
+                  screenHeight / 25,
+                ),
+                alignment: Alignment.topRight,
+                child: InkWell(
                   onTap: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamedAndRemoveUntil("Register", (route) => false);
+                    if (email.text == "") {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        title: 'Email field is empty',
+                        desc: 'Please enter your email in the email field.',
+                      ).show();
+                    } else {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.question,
+                        animType: AnimType.rightSlide,
+                        title: 'Password reset',
+                        desc: 'Want to receive password reset mail?',
+                        btnCancelOnPress: () {},
+                        btnOkOnPress: () async {
+                          await FirebaseAuth.instance.sendPasswordResetEmail(
+                            email: email.text,
+                          );
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.success,
+                            animType: AnimType.rightSlide,
+                            title: 'Password reset mail sent',
+                            desc: 'Check your inbox and reset password.',
+                          ).show();
+                        },
+                      ).show();
+                    }
                   },
                   child: const Text(
-                    "Register",
+                    "Forget Password?",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-              ],
-            ),
-            CustButtom(
-              colorCode: 0xff55949b,
-              text: "Login",
-              onPressed: () async {
-                if (formState.currentState!.validate()) {
-                  try {
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: email.text,
-                      password: password.text,
-                    );
-                    if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-                      FirebaseAuth.instance.signOut();
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.warning,
-                        animType: AnimType.rightSlide,
-                        title: 'Email not verified',
-                        desc: 'Please verify your email before logging in.',
-                      ).show();
-                      return;
-                    } else {
+              ),
+              const CustDivider(),
+              Container(height: screenHeight / 40),
+              const OtherSigninOptions(),
+              Container(height: screenHeight / 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xffB0B0B0),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
                       Navigator.of(
                         context,
-                      ).pushNamedAndRemoveUntil("Home", (route) => false);
+                      ).pushNamedAndRemoveUntil("Register", (route) => false);
+                    },
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              CustButtom(
+                colorCode: 0xff55949b,
+                text: "Login",
+                onPressed: () async {
+                  if (formState.currentState!.validate()) {
+                    try {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: email.text,
+                        password: password.text,
+                      );
+                      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+                        FirebaseAuth.instance.signOut();
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.warning,
+                          animType: AnimType.rightSlide,
+                          title: 'Email not verified',
+                          desc: 'Please verify your email before logging in.',
+                        ).show();
+                        return;
+                      } else {
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil("Home", (route) => false);
+                      }
+                    } on FirebaseAuthException catch (e) {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        title: 'Authentication Error',
+                        desc:
+                            e.message ??
+                            'An unknown authentication error occurred.',
+                      ).show();
                     }
-                  } on FirebaseAuthException catch (e) {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.rightSlide,
-                      title: 'Authentication Error',
-                      desc:
-                          e.message ??
-                          'An unknown authentication error occurred.',
-                    ).show();
                   }
-                }
-              },
-              textColorCode: 0xffFFFFFF,
-            ),
-          ],
+                },
+                textColorCode: 0xffFFFFFF,
+              ),
+            ],
+          ),
         ),
       ),
     );
