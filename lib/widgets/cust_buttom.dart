@@ -15,13 +15,15 @@ class CustButtom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         color: Color(colorCode),
       ),
-      width: 340,
-      height: 60,
+      width: screenWidth / 1.2,
+      height: screenHeight / 14,
       child: MaterialButton(
         textColor: Color(textColorCode),
         onPressed: onPressed,
