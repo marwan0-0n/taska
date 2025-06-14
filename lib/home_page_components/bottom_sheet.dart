@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetComponents extends StatefulWidget {
@@ -11,6 +13,11 @@ class _BottomSheetComponentsState extends State<BottomSheetComponents> {
   bool isTextNotEmpty = false;
   late TextEditingController name;
   GlobalKey<FormState> formState = GlobalKey<FormState>();
+  CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
+  addTask() async {
+    DocumentReference response = await tasks.add({"name": name.text});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +62,22 @@ class _BottomSheetComponentsState extends State<BottomSheetComponents> {
           children: [
             isTextNotEmpty == true
                 ? InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      try {
+                        addTask();
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil("Home", (route) => false);
+                      } catch (e) {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          title: 'Error',
+                          desc: '$e',
+                        ).show();
+                      }
+                    },
                     child: Text(
                       "Save",
                       textAlign: TextAlign.end,
