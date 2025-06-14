@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
                         hint: "Enter your email",
                         textConroller: email,
                       ),
-                      Container(height: screenHeight / 50),
+                      SizedBox(height: screenHeight / 50),
                       PasswordForm(passwordController: password),
                     ],
                   ),
@@ -125,9 +125,9 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const CustDivider(),
-                Container(height: screenHeight / 40),
+                SizedBox(height: screenHeight / 40),
                 const OtherSigninOptions(),
-                Container(height: screenHeight / 40),
+                SizedBox(height: screenHeight / 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

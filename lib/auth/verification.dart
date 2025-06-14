@@ -67,7 +67,7 @@ class _VerificationState extends State<Verification> {
                     ),
                   ),
                 ),
-                Container(height: screenHeight / 30),
+                SizedBox(height: screenHeight / 30),
                 Text(
                   notVerifyed,
                   style: const TextStyle(
@@ -93,7 +93,7 @@ class _VerificationState extends State<Verification> {
                   },
                   textColorCode: 0xffFFFFFF,
                 ),
-                Container(height: screenHeight / 90),
+                SizedBox(height: screenHeight / 90),
                 InkWell(
                   onTap: () async {
                     await FirebaseAuth.instance.currentUser!

@@ -51,7 +51,7 @@ class _AuthPageState extends State<AuthPage> {
                   ),
                 ),
               ),
-              Container(height: screenHeight / 35),
+              SizedBox(height: screenHeight / 35),
               CustButtom(
                 colorCode: 0xff55949b,
                 text: "Login",
@@ -60,7 +60,7 @@ class _AuthPageState extends State<AuthPage> {
                 },
                 textColorCode: 0xffFFFFFF,
               ),
-              Container(height: screenHeight / 38),
+              SizedBox(height: screenHeight / 38),
               CustButtom(
                 colorCode: 0xffb2f0d4,
                 text: "Register",

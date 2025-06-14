@@ -25,7 +25,7 @@ class CustTextForm extends StatelessWidget {
             ),
           ),
         ),
-        Container(height: 25),
+        const SizedBox(height: 25),
       ],
     );
   }
