@@ -32,9 +32,13 @@ class _AppbarTitlesState extends State<AppbarTitles> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Text(
       randomTitle,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: screenWidth * 0.055,
+      ),
     );
   }
 }
