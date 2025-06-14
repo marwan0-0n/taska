@@ -23,6 +23,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -38,110 +39,118 @@ class _RegisterState extends State<Register> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          child: ListView(
-            children: [
-              const Center(child: CircleLogo()),
-              const Text(
-                "Let's Sign You Up",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                "Welcome To Taska!",
-                style: TextStyle(fontSize: 37, color: Color(0xffB0B0B0)),
-              ),
-              Form(
-                key: formState,
-                child: Column(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Center(child: CircleLogo()),
+                Text(
+                  "Let's Sign You Up",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "Welcome To Taska!",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.09,
+                    color: const Color(0xffB0B0B0),
+                  ),
+                ),
+                Form(
+                  key: formState,
+                  child: Column(
+                    children: [
+                      CustReqTextForm(
+                        titleText: "Username",
+                        hint: "Enter Username",
+                        textConroller: userName,
+                      ),
+                      Container(height: screenHeight / 50),
+                      CustReqTextForm(
+                        titleText: "Email",
+                        hint: "Enter Email",
+                        textConroller: email,
+                      ),
+                      Container(height: screenHeight / 50),
+                      PasswordForm(passwordController: password),
+                      Container(height: screenHeight / 50),
+                      ConfirmPasswordForm(
+                        confirmPasswordController: password2,
+                        originalPasswordController: password,
+                      ),
+                      Container(height: screenHeight / 50),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustReqTextForm(
-                      titleText: "Username",
-                      hint: "Enter Username",
-                      textConroller: userName,
+                    const Text(
+                      "Already have an account? ",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xffB0B0B0),
+                      ),
                     ),
-                    Container(height: screenHeight / 50),
-                    CustReqTextForm(
-                      titleText: "Email",
-                      hint: "Enter Email",
-                      textConroller: email,
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed("Login");
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    Container(height: screenHeight / 50),
-                    PasswordForm(passwordController: password),
-                    Container(height: screenHeight / 50),
-                    ConfirmPasswordForm(
-                      confirmPasswordController: password2,
-                      originalPasswordController: password,
-                    ),
-                    Container(height: screenHeight / 50),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Already have an account? ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffB0B0B0),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("Login");
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              CustButtom(
-                colorCode: 0xffb2f0d4,
-                text: "Sign Up",
-                onPressed: () async {
-                  if (formState.currentState!.validate()) {
-                    try {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                            email: email.text,
-                            password: password.text,
-                          );
-                      await FirebaseAuth.instance.currentUser!
-                          .sendEmailVerification();
-                      Navigator.of(context).pushNamed("Verify page");
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'weak-password') {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.warning,
-                          animType: AnimType.rightSlide,
-                          title: 'Weak Password',
-                          desc: 'The password provided is too weak.',
-                        ).show();
-                      } else if (e.code == 'email-already-in-use') {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.warning,
-                          animType: AnimType.rightSlide,
-                          title: 'Account already exists',
-                          desc: 'The account already exists for that email.',
-                        ).show();
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.warning,
-                          animType: AnimType.rightSlide,
-                          title: 'Wrong Email',
-                          desc: 'The email entered is wrong try again',
-                        ).show();
+                CustButtom(
+                  colorCode: 0xffb2f0d4,
+                  text: "Sign Up",
+                  onPressed: () async {
+                    if (formState.currentState!.validate()) {
+                      try {
+                        await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                              email: email.text,
+                              password: password.text,
+                            );
+                        await FirebaseAuth.instance.currentUser!
+                            .sendEmailVerification();
+                        Navigator.of(context).pushNamed("Verify page");
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'weak-password') {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.rightSlide,
+                            title: 'Weak Password',
+                            desc: 'The password provided is too weak.',
+                          ).show();
+                        } else if (e.code == 'email-already-in-use') {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.rightSlide,
+                            title: 'Account already exists',
+                            desc: 'The account already exists for that email.',
+                          ).show();
+                        } else {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.warning,
+                            animType: AnimType.rightSlide,
+                            title: 'Wrong Email',
+                            desc: 'The email entered is wrong try again',
+                          ).show();
+                        }
                       }
                     }
-                  }
-                },
-                textColorCode: 0xff000000,
-              ),
-            ],
+                  },
+                  textColorCode: 0xff000000,
+                ),
+              ],
+            ),
           ),
         ),
       ),

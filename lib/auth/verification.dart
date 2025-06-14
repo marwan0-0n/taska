@@ -16,6 +16,7 @@ class _VerificationState extends State<Verification> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -30,84 +31,82 @@ class _VerificationState extends State<Verification> {
         iconTheme: const IconThemeData(size: 35, color: Colors.black),
       ),
       body: SafeArea(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    height: 300,
-                    margin: EdgeInsets.symmetric(vertical: screenHeight / 100),
-                    child: Image.asset(
-                      "assets/images/account_verification.png",
-                      fit: BoxFit.fill,
-                    ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  height: 300,
+                  margin: EdgeInsets.symmetric(vertical: screenHeight / 100),
+                  child: Image.asset(
+                    "assets/images/account_verification.png",
+                    fit: BoxFit.fill,
                   ),
-                  const Center(
+                ),
+                Center(
+                  child: Text(
+                    "Verify your account",
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Center(
+                  child: Center(
                     child: Text(
-                      "Verify your account",
+                      "We've sent you a verification link to your Email",
                       style: TextStyle(
-                        fontSize: 50,
+                        fontSize: screenWidth * 0.04,
+                        color: const Color(0xffB0B0B0),
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const Center(
-                    child: Center(
-                      child: Text(
-                        "We've sent you a verification link to your Email",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xffB0B0B0),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                ),
+                Container(height: screenHeight / 30),
+                Text(
+                  notVerifyed,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Container(height: screenHeight / 30),
-                  Text(
-                    notVerifyed,
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                CustButtom(
+                  colorCode: 0xff55949b,
+                  text: "Login",
+                  onPressed: () async {
+                    await FirebaseAuth.instance.currentUser?.reload();
+                    User? user = FirebaseAuth.instance.currentUser;
+                    if (user != null && user.emailVerified) {
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil("Home", (route) => false);
+                    } else {
+                      setState(() {
+                        notVerifyed = "Your email is not verified yet!";
+                      });
+                    }
+                  },
+                  textColorCode: 0xffFFFFFF,
+                ),
+                Container(height: screenHeight / 90),
+                InkWell(
+                  onTap: () async {
+                    await FirebaseAuth.instance.currentUser!
+                        .sendEmailVerification();
+                  },
+                  child: const Text(
+                    "Click here if you didn't recieve the email",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  CustButtom(
-                    colorCode: 0xff55949b,
-                    text: "Login",
-                    onPressed: () async {
-                      await FirebaseAuth.instance.currentUser?.reload();
-                      User? user = FirebaseAuth.instance.currentUser;
-                      if (user != null && user.emailVerified) {
-                        Navigator.of(
-                          context,
-                        ).pushNamedAndRemoveUntil("Home", (route) => false);
-                      } else {
-                        setState(() {
-                          notVerifyed = "Your email is not verified yet!";
-                        });
-                      }
-                    },
-                    textColorCode: 0xffFFFFFF,
-                  ),
-                  Container(height: screenHeight / 90),
-                  InkWell(
-                    onTap: () async {
-                      await FirebaseAuth.instance.currentUser!
-                          .sendEmailVerification();
-                    },
-                    child: const Text(
-                      "Click here if you didn't recieve the email",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
