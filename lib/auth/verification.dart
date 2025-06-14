@@ -17,6 +17,18 @@ class _VerificationState extends State<Verification> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil("Login", (route) => false);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        iconTheme: const IconThemeData(size: 35, color: Colors.black),
+      ),
       body: SafeArea(
         child: ListView(
           children: [

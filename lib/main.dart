@@ -38,9 +38,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: FirebaseAuth.instance.currentUser == null
           ? const AuthPage()
-          : FirebaseAuth.instance.currentUser!.emailVerified
-          ? const HomePage()
-          : const Verification(),
+          : const HomePage(),
       routes: {
         "Login": (context) => const Login(),
         "Register": (context) => const Register(),

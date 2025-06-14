@@ -153,21 +153,9 @@ class _LoginState extends State<Login> {
                         email: email.text,
                         password: password.text,
                       );
-                      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-                        FirebaseAuth.instance.signOut();
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.warning,
-                          animType: AnimType.rightSlide,
-                          title: 'Email not verified',
-                          desc: 'Please verify your email before logging in.',
-                        ).show();
-                        return;
-                      } else {
-                        Navigator.of(
-                          context,
-                        ).pushNamedAndRemoveUntil("Home", (route) => false);
-                      }
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil("Home", (route) => false);
                     } on FirebaseAuthException catch (e) {
                       AwesomeDialog(
                         context: context,
