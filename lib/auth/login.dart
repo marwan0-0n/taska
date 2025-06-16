@@ -172,12 +172,11 @@ class _LoginState extends State<Login> {
                                     email: email.text,
                                     password: password.text,
                                   );
+                              Navigator.of(
+                                context,
+                              ).pushReplacementNamed("Home");
                               isLoading = false;
                               setState(() {});
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                "Home",
-                                (route) => false,
-                              );
                             } on FirebaseAuthException catch (e) {
                               AwesomeDialog(
                                 context: context,
@@ -188,6 +187,8 @@ class _LoginState extends State<Login> {
                                     e.message ??
                                     'An unknown authentication error occurred.',
                               ).show();
+                              isLoading = false;
+                              setState(() {});
                             }
                           }
                         },

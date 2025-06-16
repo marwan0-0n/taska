@@ -124,9 +124,9 @@ class _RegisterState extends State<Register> {
                                   );
                               await FirebaseAuth.instance.currentUser!
                                   .sendEmailVerification();
+                              Navigator.of(context).pushNamed("Verify page");
                               isLoading = false;
                               setState(() {});
-                              Navigator.of(context).pushNamed("Verify page");
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'weak-password') {
                                 AwesomeDialog(
@@ -136,6 +136,8 @@ class _RegisterState extends State<Register> {
                                   title: 'Weak Password',
                                   desc: 'The password provided is too weak.',
                                 ).show();
+                                isLoading = false;
+                                setState(() {});
                               } else if (e.code == 'email-already-in-use') {
                                 AwesomeDialog(
                                   context: context,
@@ -145,6 +147,8 @@ class _RegisterState extends State<Register> {
                                   desc:
                                       'The account already exists for that email.',
                                 ).show();
+                                isLoading = false;
+                                setState(() {});
                               } else {
                                 AwesomeDialog(
                                   context: context,
@@ -153,6 +157,8 @@ class _RegisterState extends State<Register> {
                                   title: 'Wrong Email',
                                   desc: 'The email entered is wrong try again',
                                 ).show();
+                                isLoading = false;
+                                setState(() {});
                               }
                             }
                           }

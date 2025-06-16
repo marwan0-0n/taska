@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetComponents extends StatefulWidget {
@@ -15,7 +16,11 @@ class _BottomSheetComponentsState extends State<BottomSheetComponents> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
   addTask() async {
-    await tasks.add({"name": name.text});
+    await tasks.add({
+      "name": name.text,
+      "id": FirebaseAuth.instance.currentUser!.uid,
+      "isChecked": false,
+    });
   }
 
   @override

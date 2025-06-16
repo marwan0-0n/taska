@@ -16,14 +16,14 @@ class HomePage extends StatefulWidget {
 bool isLoading = true;
 
 class _HomePageState extends State<HomePage> {
-  List<bool> boxStatus = [];
   List tasks = [];
   getData() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("tasks")
+        .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
-    tasks.addAll(querySnapshot.docs);
-    boxStatus = List.generate(tasks.length, (_) => false);
+    tasks = querySnapshot.docs;
+
     isLoading = false;
     setState(() {});
   }
@@ -137,8 +137,8 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, i) => ListTile(
                               title: Text(
                                 tasks[i]['name'],
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.045,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -152,7 +152,6 @@ class _HomePageState extends State<HomePage> {
                                           .delete();
                                       setState(() {
                                         tasks.removeAt(i);
-                                        boxStatus.removeAt(i);
                                       });
                                     },
                                     child: const Text("Delete task"),
@@ -160,11 +159,14 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               leading: Checkbox(
-                                value: boxStatus[i],
-                                onChanged: (value) {
-                                  setState(() {
-                                    boxStatus[i] = value!;
-                                  });
+                                value: tasks[i]['isChecked'] ?? false,
+                                onChanged: (value) async {
+                                  final taskId = tasks[i].id;
+                                  await FirebaseFirestore.instance
+                                      .collection("tasks")
+                                      .doc(taskId)
+                                      .update({"isChecked": value});
+                                  await getData();
                                 },
                               ),
                             ),
