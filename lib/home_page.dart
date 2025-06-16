@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:taska/home_page_components/appbar_titles.dart';
 import 'package:taska/home_page_components/add_bottom_sheet.dart';
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
 bool isLoading = true;
 
 class _HomePageState extends State<HomePage> {
-  List tasks = [];
+  List<DocumentSnapshot> tasks = [];
   getData() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("tasks")
@@ -134,76 +135,106 @@ class _HomePageState extends State<HomePage> {
                             ),
                             shrinkWrap: true,
                             itemCount: tasks.length,
-                            itemBuilder: (context, i) => ListTile(
-                              title: Text(
-                                tasks[i]['name'],
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.045,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              trailing: PopupMenuButton(
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20),
+                            itemBuilder: (context, i) =>
+                                AnimationConfiguration.staggeredList(
+                                  position: i,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: SlideAnimation(
+                                    verticalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                      child: ListTile(
+                                        title: AnimatedDefaultTextStyle(
+                                          duration: const Duration(
+                                            milliseconds: 300,
                                           ),
-                                        ),
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        builder: (context) => Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(
-                                              context,
-                                            ).viewInsets.bottom,
+                                          style: TextStyle(
+                                            fontSize: screenWidth * 0.045,
+                                            fontWeight: FontWeight.bold,
+                                            decoration:
+                                                tasks[i]['isChecked'] == true
+                                                ? TextDecoration.lineThrough
+                                                : TextDecoration.none,
                                           ),
-                                          child: SingleChildScrollView(
-                                            child: Container(
-                                              height: screenHeight * 0.18,
-                                              padding: const EdgeInsets.all(16),
-                                              child: UpdateBottomSheet(
-                                                refreshTasks: getData,
-                                                oldName: tasks[i]['name'],
-                                                taskID: tasks[i].id,
-                                              ),
+                                          child: Text(
+                                            tasks[i]['name'],
+                                            style: const TextStyle(
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                    child: const Text("Edit task"),
+                                        trailing: PopupMenuButton(
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  shape: const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                          top: Radius.circular(
+                                                            20,
+                                                          ),
+                                                        ),
+                                                  ),
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  builder: (context) => Padding(
+                                                    padding: EdgeInsets.only(
+                                                      bottom: MediaQuery.of(
+                                                        context,
+                                                      ).viewInsets.bottom,
+                                                    ),
+                                                    child: SingleChildScrollView(
+                                                      child: Container(
+                                                        height:
+                                                            screenHeight * 0.18,
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              16,
+                                                            ),
+                                                        child: UpdateBottomSheet(
+                                                          refreshTasks: getData,
+                                                          oldName:
+                                                              tasks[i]['name'],
+                                                          taskID: tasks[i].id,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text("Edit task"),
+                                            ),
+                                            PopupMenuItem(
+                                              onTap: () async {
+                                                await FirebaseFirestore.instance
+                                                    .collection("tasks")
+                                                    .doc(tasks[i].id)
+                                                    .delete();
+                                                setState(() {
+                                                  tasks.removeAt(i);
+                                                });
+                                              },
+                                              child: const Text("Delete task"),
+                                            ),
+                                          ],
+                                        ),
+                                        leading: Checkbox(
+                                          value: tasks[i]['isChecked'] ?? false,
+                                          onChanged: (value) async {
+                                            final taskId = tasks[i].id;
+                                            await FirebaseFirestore.instance
+                                                .collection("tasks")
+                                                .doc(taskId)
+                                                .update({"isChecked": value});
+                                            await getData();
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  PopupMenuItem(
-                                    onTap: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection("tasks")
-                                          .doc(tasks[i].id)
-                                          .delete();
-                                      setState(() {
-                                        tasks.removeAt(i);
-                                      });
-                                    },
-                                    child: const Text("Delete task"),
-                                  ),
-                                ],
-                              ),
-                              leading: Checkbox(
-                                value: tasks[i]['isChecked'] ?? false,
-                                onChanged: (value) async {
-                                  final taskId = tasks[i].id;
-                                  await FirebaseFirestore.instance
-                                      .collection("tasks")
-                                      .doc(taskId)
-                                      .update({"isChecked": value});
-                                  await getData();
-                                },
-                              ),
-                            ),
+                                ),
                           ),
                   ),
                 ),
