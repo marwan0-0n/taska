@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
         .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
     tasks = querySnapshot.docs;
-
     isLoading = false;
     setState(() {});
   }
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   height: screenHeight * 0.18,
                   padding: const EdgeInsets.all(16),
-                  child: const BottomSheetComponents(),
+                  child: BottomSheetComponents(refreshTasks: getData),
                 ),
               ),
             ),

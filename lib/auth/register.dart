@@ -128,6 +128,8 @@ class _RegisterState extends State<Register> {
                               isLoading = false;
                               setState(() {});
                             } on FirebaseAuthException catch (e) {
+                              isLoading = false;
+                              setState(() {});
                               if (e.code == 'weak-password') {
                                 AwesomeDialog(
                                   context: context,
@@ -136,8 +138,6 @@ class _RegisterState extends State<Register> {
                                   title: 'Weak Password',
                                   desc: 'The password provided is too weak.',
                                 ).show();
-                                isLoading = false;
-                                setState(() {});
                               } else if (e.code == 'email-already-in-use') {
                                 AwesomeDialog(
                                   context: context,
@@ -147,8 +147,6 @@ class _RegisterState extends State<Register> {
                                   desc:
                                       'The account already exists for that email.',
                                 ).show();
-                                isLoading = false;
-                                setState(() {});
                               } else {
                                 AwesomeDialog(
                                   context: context,
@@ -157,8 +155,6 @@ class _RegisterState extends State<Register> {
                                   title: 'Wrong Email',
                                   desc: 'The email entered is wrong try again',
                                 ).show();
-                                isLoading = false;
-                                setState(() {});
                               }
                             }
                           }

@@ -178,6 +178,8 @@ class _LoginState extends State<Login> {
                               isLoading = false;
                               setState(() {});
                             } on FirebaseAuthException catch (e) {
+                              isLoading = false;
+                              setState(() {});
                               AwesomeDialog(
                                 context: context,
                                 dialogType: DialogType.error,
@@ -187,8 +189,6 @@ class _LoginState extends State<Login> {
                                     e.message ??
                                     'An unknown authentication error occurred.',
                               ).show();
-                              isLoading = false;
-                              setState(() {});
                             }
                           }
                         },
