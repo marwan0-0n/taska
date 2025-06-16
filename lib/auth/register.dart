@@ -23,6 +23,16 @@ class _RegisterState extends State<Register> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
+
+  @override
+  void dispose() {
+    userName.dispose();
+    email.dispose();
+    password.dispose();
+    password2.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
