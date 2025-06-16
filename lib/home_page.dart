@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:taska/home_page_components/appbar_titles.dart';
 import 'package:taska/home_page_components/bottom_sheet.dart';
+import 'package:taska/widgets/loading.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +12,8 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
+bool isLoading = true;
 
 class _HomePageState extends State<HomePage> {
   List<bool> boxStatus = [];
@@ -21,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         .get();
     tasks.addAll(querySnapshot.docs);
     boxStatus = List.generate(tasks.length, (_) => false);
+    isLoading = false;
     setState(() {});
   }
 
@@ -83,37 +87,49 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: const Color(0xff55949b),
-          ),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: tasks.length,
-            itemBuilder: (context, i) => ListTile(
-              title: Text(
-                tasks[i]['name'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+      body: isLoading
+          ? const LoadingSpinKit()
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: const Color(0xff55949b),
+                    ),
+                    child: ListView.builder(
+                      physics: const ScrollPhysics(
+                        parent: NeverScrollableScrollPhysics(),
+                      ),
+                      shrinkWrap: true,
+                      itemCount: tasks.length,
+                      itemBuilder: (context, i) => ListTile(
+                        title: Text(
+                          tasks[i]['name'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        leading: Checkbox(
+                          value: boxStatus[i],
+                          onChanged: (value) {
+                            setState(() {
+                              boxStatus[i] = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              leading: Checkbox(
-                value: boxStatus[i],
-                onChanged: (value) {
-                  setState(() {
-                    boxStatus[i] = value!;
-                  });
-                },
-              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
