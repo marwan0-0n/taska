@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -102,30 +103,72 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(25),
                       color: const Color(0xff55949b),
                     ),
-                    child: ListView.builder(
-                      physics: const ScrollPhysics(
-                        parent: NeverScrollableScrollPhysics(),
-                      ),
-                      shrinkWrap: true,
-                      itemCount: tasks.length,
-                      itemBuilder: (context, i) => ListTile(
-                        title: Text(
-                          tasks[i]['name'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    child: tasks.isEmpty
+                        ? Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(screenWidth * 0.05),
+                                margin: EdgeInsets.only(
+                                  bottom: screenWidth * 0.05,
+                                ),
+                                width: screenWidth,
+                                height: screenHeight * 0.4,
+                                child: Image.asset(
+                                  "assets/images/empty_list.png",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Text(
+                                "No tasks?\nLet's change that!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenWidth * 0.075,
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView.builder(
+                            physics: const ScrollPhysics(
+                              parent: NeverScrollableScrollPhysics(),
+                            ),
+                            shrinkWrap: true,
+                            itemCount: tasks.length,
+                            itemBuilder: (context, i) => ListTile(
+                              title: Text(
+                                tasks[i]['name'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              trailing: PopupMenuButton(
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    onTap: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection("tasks")
+                                          .doc(tasks[i].id)
+                                          .delete();
+                                      setState(() {
+                                        tasks.removeAt(i);
+                                        boxStatus.removeAt(i);
+                                      });
+                                    },
+                                    child: const Text("Delete task"),
+                                  ),
+                                ],
+                              ),
+                              leading: Checkbox(
+                                value: boxStatus[i],
+                                onChanged: (value) {
+                                  setState(() {
+                                    boxStatus[i] = value!;
+                                  });
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                        leading: Checkbox(
-                          value: boxStatus[i],
-                          onChanged: (value) {
-                            setState(() {
-                              boxStatus[i] = value!;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ),

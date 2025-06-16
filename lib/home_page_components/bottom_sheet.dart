@@ -15,7 +15,7 @@ class _BottomSheetComponentsState extends State<BottomSheetComponents> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
   addTask() async {
-    DocumentReference response = await tasks.add({"name": name.text});
+    await tasks.add({"name": name.text});
   }
 
   @override
@@ -65,9 +65,7 @@ class _BottomSheetComponentsState extends State<BottomSheetComponents> {
                     onTap: () {
                       try {
                         addTask();
-                        Navigator.of(
-                          context,
-                        ).pushNamedAndRemoveUntil("Home", (route) => false);
+                        Navigator.of(context).pushReplacementNamed("Home");
                       } catch (e) {
                         AwesomeDialog(
                           context: context,
