@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:taska/home_page_components/appbar_titles.dart';
-import 'package:taska/home_page_components/bottom_sheet.dart';
+import 'package:taska/home_page_components/add_bottom_sheet.dart';
+import 'package:taska/home_page_components/update_bottom_sheet.dart';
 import 'package:taska/widgets/loading.dart';
 
 class HomePage extends StatefulWidget {
@@ -143,6 +144,40 @@ class _HomePageState extends State<HomePage> {
                               ),
                               trailing: PopupMenuButton(
                                 itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                        ),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        builder: (context) => Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(
+                                              context,
+                                            ).viewInsets.bottom,
+                                          ),
+                                          child: SingleChildScrollView(
+                                            child: Container(
+                                              height: screenHeight * 0.18,
+                                              padding: const EdgeInsets.all(16),
+                                              child: UpdateBottomSheet(
+                                                refreshTasks: getData,
+                                                oldName: tasks[i]['name'],
+                                                taskID: tasks[i].id,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("Edit task"),
+                                  ),
                                   PopupMenuItem(
                                     onTap: () async {
                                       await FirebaseFirestore.instance
